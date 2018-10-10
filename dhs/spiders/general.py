@@ -4,7 +4,7 @@ import pudb
 # pudb.set_trace()
 
 # Define configuration
-PAGES = 300
+PAGES = 330
 BASE_URL = 'https://ltclicensing.oregon.gov/Facilities?page=2&RangeValue=50&AFH=True&ALF=True&NF=True&RCF=True&Medicaid=True&Medicare=True&PrivatePay=True&OpenOnly=False'
 URL_INIT = "https://ltclicensing.oregon.gov"
 CONFIG = {
@@ -14,6 +14,7 @@ CONFIG = {
     {
         'facility_name':['//td[1]/text()'],
         'city':['//td[2]/text()'],
+        'type':['//td[3]/text()'],
         'url':['//tr/@data-href'],
         'beds':['//td[4]/text()'],
         'funding_source':['//td[5]/text()'],
@@ -53,7 +54,7 @@ def fetch_data(_res_sel, product, config, level):
     '''
     for key,value in config[level].items():
        for _item in value:
-           product[key] = None
+           product[key] = '' 
            x_val = _res_sel.xpath(_item).extract()
            if len(x_val)>0:
                product[key] = x_val[0].strip()
