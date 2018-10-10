@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import pudb
-#pudb.set_trace()
+# pudb.set_trace()
 
 # Define configuration
-PAGES = 3
+PAGES = 300
 BASE_URL = 'https://ltclicensing.oregon.gov/Facilities?page=2&RangeValue=50&AFH=True&ALF=True&NF=True&RCF=True&Medicaid=True&Medicare=True&PrivatePay=True&OpenOnly=False'
 URL_INIT = "https://ltclicensing.oregon.gov"
 CONFIG = {
@@ -15,7 +15,6 @@ CONFIG = {
         'facility_name':['//td[1]/text()'],
         'city':['//td[2]/text()'],
         'url':['//tr/@data-href'],
-        'type':['//td[3]/text()'],
         'beds':['//td[4]/text()'],
         'funding_source':['//td[5]/text()'],
         'status':['//td[6]/text()'],
@@ -23,7 +22,27 @@ CONFIG = {
     },
     'nested':
     {
-        'raw_text': ['//div[@id="facilityTab"]//div[@class="col-md-5"]/text()']
+        'raw_text': [
+            '//div[@id="facilityTab"]//div[@class="col-md-5"]/text()'
+        ],
+        'facility_type': [
+            '//label[@for="FacilityTypeCd"]/parent::td/following-sibling::td/text()'
+        ],
+        'phone': [
+            '//label[@for="Phone"]/parent::td/following-sibling::td/text()'
+        ],
+        'admin_name': [
+            '//label[@for="AdministratorName"]/parent::td/following-sibling::td/text()'
+        ],
+        'email': [
+            '//label[@for="Email"]/parent::td/following-sibling::td/a/text()'
+        ],
+        'owner': [
+            '//label[@for="Owner"]/parent::td/following-sibling::td/text()'
+        ],
+        'owner_since': [
+            '//label[@for="Owner_Since"]/parent::td/following-sibling::td/text()'
+        ],
 
     }
 }
@@ -71,4 +90,8 @@ class GeneralSpider(scrapy.Spider):
         nested_raws = response.xpath(CONFIG['nested']['raw_text'][0]).extract()
         nested_raw = [_raw.strip() for _raw in nested_raws if _raw.strip()!='']
         item['street'], item['zip'] = nested_raw[0], nested_raw[-1]
+        item = fetch_data(response, item, CONFIG, 'nested')
+        for _key, _value in item.items():
+            if _value.__class__ == str:
+                item[_key] = ' '.join(_value.split())
         yield item
