@@ -5,7 +5,7 @@ import pudb
 
 # Define configuration
 PAGES = 330
-BASE_URL = 'https://ltclicensing.oregon.gov/Facilities?page=2&RangeValue=50&AFH=True&ALF=True&NF=True&RCF=True&Medicaid=True&Medicare=True&PrivatePay=True&OpenOnly=False'
+BASE_URL = 'https://ltclicensing.oregon.gov/Facilities?RangeValue=50&AFH=True&ALF=True&NF=True&RCF=True&Medicaid=True&Medicare=True&PrivatePay=True&OpenOnly=False'
 URL_INIT = "https://ltclicensing.oregon.gov"
 CONFIG = {
     'results': '//tr[@class="clickable-row"]',
@@ -42,7 +42,7 @@ CONFIG = {
             '//label[@for="Owner"]/parent::td/following-sibling::td/text()'
         ],
         'owner_since': [
-            '//label[@for="Owner_Since"]/parent::td/following-sibling::td/text()'
+            '//label[@for="Owner_Since:"]/parent::td/following-sibling::td/text()'
         ],
 
     }
