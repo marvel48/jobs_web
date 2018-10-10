@@ -53,6 +53,7 @@ def fetch_data(_res_sel, product, config, level):
     '''
     for key,value in config[level].items():
        for _item in value:
+           product[key] = None
            x_val = _res_sel.xpath(_item).extract()
            if len(x_val)>0:
                product[key] = x_val[0].strip()
